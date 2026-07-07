@@ -212,9 +212,7 @@
     min-height: 80px;
     background: var(--bg);
     color: var(--text);
-    display: none;
   }
-  .notes-area.visible { display: block; }
 
   .save-notes-btn {
     margin-top: 8px;
@@ -225,9 +223,7 @@
     border-radius: var(--radius);
     font-size: 14px;
     cursor: pointer;
-    display: none;
   }
-  .save-notes-btn.visible { display: inline-block; }
   .save-notes-btn:active { background: var(--accent-bg); }
 
   .saved-note {
@@ -655,15 +651,15 @@ function renderContent() {
     html += `<div class="finish-section">
       <button class="finish-btn" 
         ${ready ? '' : 'disabled'} 
-        onclick="showNotesPrompt('${day.id}')">
-        ${dd.finished ? 'Day finished — add / edit notes' : ready ? 'Finish day →' : 'Mark all exercises first'}
+        onclick="finishDayOnly('${day.id}')">
+        ${dd.finished ? '✓ Day finished' : ready ? 'Finish day →' : 'Mark all exercises first'}
       </button>
       ${finishedMsg}
-      <textarea class="notes-area${dd.finished ? ' visible' : ''}" 
+      <textarea class="notes-area visible" 
         id="notes-${day.id}" 
         placeholder="How did it feel? Anything to note for next time..."
         onchange="saveNotes('${day.id}', this.value)">${savedNote}</textarea>
-      <button class="save-notes-btn${dd.finished ? ' visible' : ''}" onclick="saveNotesBtn('${day.id}')">Save notes</button>
+      <button class="save-notes-btn visible" onclick="saveNotesBtn('${day.id}')">Save notes</button>
     </div>`;
 
     html += `</div></div>`;
@@ -687,12 +683,27 @@ function toggleDay(dayId) {
   }
 }
 
-function showNotesPrompt(dayId) {
-  finishDay(dayId);
-  const notes = document.getElementById('notes-' + dayId);
-  const saveBtn = notes.nextElementSibling;
-  if (notes) { notes.classList.add('visible'); notes.focus(); }
-  if (saveBtn) saveBtn.classList.add('visible');
+function finishDayOnly(dayId) {
+  if (!data[dayId]) data[dayId] = { exercises: {}, finished: false, notes: '' };
+  data[dayId].finished = true;
+  saveData(data);
+  updateOverallProgress();
+  // Update just the button and status badge without re-rendering the whole page
+  const body = document.getElementById('body-' + dayId);
+  if (!body) return;
+  const btn = body.querySelector('.finish-btn');
+  if (btn) { btn.textContent = '✓ Day finished'; btn.disabled = true; }
+  const msg = body.querySelector('.completion-msg');
+  if (msg) msg.classList.add('visible');
+  // Update the header status badge
+  const header = body.previousElementSibling;
+  if (header) {
+    const badge = header.querySelector('.day-status');
+    if (badge) {
+      badge.textContent = '✓ Done';
+      badge.className = 'day-status status-done';
+    }
+  }
 }
 
 function saveNotesBtn(dayId) {
