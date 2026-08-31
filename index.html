@@ -555,11 +555,24 @@ function setExerciseStatus(dayId, exId, status) {
     data[dayId].exercises[exId] = status;
   }
   saveData(data);
-  // Update just the finish button state without full re-render
+  // Update the clicked exercise's own buttons, plus everything downstream
+  updateExerciseButtons(dayId, exId);
   updateFinishBtn(dayId);
   updateDayBadge(dayId);
   updateProgressBars();
   updateOverallProgress();
+}
+
+function updateExerciseButtons(dayId, exId) {
+  const current = data[dayId]?.exercises?.[exId];
+  const btns = document.querySelectorAll(`[data-day="${dayId}"][data-ex="${exId}"]`);
+  btns.forEach(btn => {
+    const btnStatus = btn.getAttribute('data-status');
+    btn.classList.remove('selected-green', 'selected-yellow', 'selected-red');
+    if (current === btnStatus) {
+      btn.classList.add('selected-' + btnStatus);
+    }
+  });
 }
 
 function allMarked(dayData, exercises) {
@@ -764,10 +777,13 @@ function renderContent() {
         </div>
         <div class="status-btns">
           <button class="status-btn${exStatus === 'green' ? ' selected-green' : ''}"
+            data-day="${day.id}" data-ex="${ex.id}" data-status="green"
             onclick="setExerciseStatus('${day.id}','${ex.id}','green')" title="Completed">✓</button>
           <button class="status-btn${exStatus === 'yellow' ? ' selected-yellow' : ''}"
+            data-day="${day.id}" data-ex="${ex.id}" data-status="yellow"
             onclick="setExerciseStatus('${day.id}','${ex.id}','yellow')" title="Partial">~</button>
           <button class="status-btn${exStatus === 'red' ? ' selected-red' : ''}"
+            data-day="${day.id}" data-ex="${ex.id}" data-status="red"
             onclick="setExerciseStatus('${day.id}','${ex.id}','red')" title="Missed">✗</button>
         </div>
       </div>`;
