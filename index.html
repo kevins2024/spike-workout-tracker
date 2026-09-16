@@ -1,817 +1,1175 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>4-Month Workout Plan</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workout Tracker</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-  :root {
-    --bg: #f5f5f2;
-    --card: #ffffff;
-    --border: #e0ddd6;
-    --text: #1a1a18;
-    --muted: #888780;
-    --accent: #2563eb;
-    --accent-bg: #eff6ff;
-    --green: #16a34a;
-    --green-bg: #dcfce7;
-    --yellow: #ca8a04;
-    --yellow-bg: #fef9c3;
-    --red: #dc2626;
-    --red-bg: #fee2e2;
-    --radius: 10px;
-  }
+      :root {
+        --bg: #f5f5f2;
+        --card: #ffffff;
+        --border: #e0ddd6;
+        --text: #1a1a18;
+        --muted: #888780;
+        --accent: #2563eb;
+        --accent-bg: #eff6ff;
+        --green: #16a34a;
+        --green-bg: #dcfce7;
+        --yellow: #ca8a04;
+        --yellow-bg: #fef9c3;
+        --red: #dc2626;
+        --red-bg: #fee2e2;
+        --radius: 10px;
+      }
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 0 0 80px;
-  }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        padding: 0 0 80px;
+      }
 
-  header {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 20px 12px;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  header h1 { font-size: 18px; font-weight: 600; }
-  header p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+      header {
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        padding: 16px 20px 12px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      header h1 {
+        font-size: 18px;
+        font-weight: 600;
+      }
+      header p {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
 
-  .phase-nav {
-    display: flex;
-    gap: 6px;
-    padding: 12px 16px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-  }
-  .phase-nav::-webkit-scrollbar { display: none; }
+      .week-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding: 12px 16px;
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+      }
+      .week-arrow {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        font-size: 18px;
+        color: var(--text);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .week-arrow:disabled {
+        opacity: 0.35;
+        cursor: default;
+      }
+      .week-info {
+        text-align: center;
+      }
+      .week-title {
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .week-select {
+        margin-top: 3px;
+        font-size: 12px;
+        color: var(--muted);
+        border: none;
+        background: transparent;
+        text-align: center;
+      }
 
-  .phase-btn {
-    flex-shrink: 0;
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: transparent;
-    font-size: 13px;
-    color: var(--muted);
-    cursor: pointer;
-  }
-  .phase-btn.active {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-    font-weight: 500;
-  }
+      .content {
+        padding: 16px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
 
-  .content { padding: 16px; max-width: 600px; margin: 0 auto; }
+      .phase-header {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        margin-bottom: 12px;
+      }
+      .phase-header h2 {
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .phase-header p {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+      .phase-note {
+        font-size: 13px;
+        color: #1e40af;
+        background: var(--accent-bg);
+        border-radius: 6px;
+        padding: 8px 10px;
+        margin-top: 10px;
+        line-height: 1.5;
+      }
 
-  .phase-header {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    margin-bottom: 12px;
-  }
-  .phase-header h2 { font-size: 16px; font-weight: 600; }
-  .phase-header p { font-size: 13px; color: var(--muted); margin-top: 3px; }
-  .phase-note {
-    font-size: 13px;
-    color: #1e40af;
-    background: var(--accent-bg);
-    border-radius: 6px;
-    padding: 8px 10px;
-    margin-top: 10px;
-    line-height: 1.5;
-  }
+      .day-section {
+        margin-bottom: 12px;
+      }
 
-  .day-section { margin-bottom: 12px; }
+      .day-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius) var(--radius) 0 0;
+        padding: 12px 14px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .day-header.collapsed {
+        border-radius: var(--radius);
+      }
 
-  .day-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius) var(--radius) 0 0;
-    padding: 12px 14px;
-    cursor: pointer;
-    user-select: none;
-  }
-  .day-header.collapsed { border-radius: var(--radius); }
+      .day-title {
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .optional-tag {
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 1px 7px;
+        margin-left: 6px;
+      }
 
-  .day-title { font-size: 15px; font-weight: 600; }
-  .day-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+      .day-status {
+        font-size: 11px;
+        font-weight: 500;
+        padding: 3px 9px;
+        border-radius: 20px;
+        white-space: nowrap;
+      }
+      .status-done {
+        background: var(--green-bg);
+        color: var(--green);
+      }
+      .status-partial {
+        background: var(--yellow-bg);
+        color: var(--yellow);
+      }
+      .status-pending {
+        background: var(--bg);
+        color: var(--muted);
+        border: 1px solid var(--border);
+      }
 
-  .day-status {
-    font-size: 11px;
-    font-weight: 500;
-    padding: 3px 9px;
-    border-radius: 20px;
-    white-space: nowrap;
-  }
-  .status-done { background: var(--green-bg); color: var(--green); }
-  .status-partial { background: var(--yellow-bg); color: var(--yellow); }
-  .status-missed { background: var(--red-bg); color: var(--red); }
-  .status-pending { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+      .day-body {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-top: none;
+        border-radius: 0 0 var(--radius) var(--radius);
+        padding: 0 14px 14px;
+      }
+      .day-body.hidden {
+        display: none;
+      }
 
-  .day-body {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-top: none;
-    border-radius: 0 0 var(--radius) var(--radius);
-    padding: 0 14px 14px;
-  }
-  .day-body.hidden { display: none; }
+      .rest-day {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+        font-size: 13px;
+        color: var(--muted);
+        font-style: italic;
+      }
 
-  .rest-day {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 12px 14px;
-    font-size: 13px;
-    color: var(--muted);
-    font-style: italic;
-  }
+      .exercise-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .exercise-row:last-of-type {
+        border-bottom: none;
+      }
 
-  .exercise-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .exercise-row:last-of-type { border-bottom: none; }
+      .exercise-text {
+        flex: 1;
+        font-size: 14px;
+        line-height: 1.4;
+        padding-top: 2px;
+      }
+      .exercise-sub {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
 
-  .exercise-text { flex: 1; font-size: 14px; line-height: 1.4; padding-top: 2px; }
-  .exercise-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+      .status-btns {
+        display: flex;
+        gap: 5px;
+        flex-shrink: 0;
+      }
 
-  .status-btns { display: flex; gap: 5px; flex-shrink: 0; }
+      .status-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        background: transparent;
+        cursor: pointer;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.1s;
+      }
+      .status-btn:active {
+        transform: scale(0.9);
+      }
+      .status-btn.selected-green {
+        background: var(--green-bg);
+        border-color: var(--green);
+      }
+      .status-btn.selected-yellow {
+        background: var(--yellow-bg);
+        border-color: var(--yellow);
+      }
+      .status-btn.selected-red {
+        background: var(--red-bg);
+        border-color: var(--red);
+      }
 
-  .status-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    background: transparent;
-    cursor: pointer;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.1s;
-  }
-  .status-btn:active { transform: scale(0.9); }
-  .status-btn.selected-green { background: var(--green-bg); border-color: var(--green); }
-  .status-btn.selected-yellow { background: var(--yellow-bg); border-color: var(--yellow); }
-  .status-btn.selected-red { background: var(--red-bg); border-color: var(--red); }
+      .finish-section {
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid var(--border);
+      }
 
-  .finish-section {
-    margin-top: 16px;
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
-  }
+      .finish-btn {
+        width: 100%;
+        padding: 12px;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius);
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .finish-btn:disabled {
+        background: var(--border);
+        color: var(--muted);
+        cursor: default;
+      }
+      .finish-btn:not(:disabled):active {
+        opacity: 0.85;
+      }
 
-  .finish-btn {
-    width: 100%;
-    padding: 12px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .finish-btn:disabled {
-    background: var(--border);
-    color: var(--muted);
-    cursor: default;
-  }
-  .finish-btn:not(:disabled):active { opacity: 0.85; }
+      .notes-area {
+        width: 100%;
+        margin-top: 10px;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        font-size: 14px;
+        font-family: inherit;
+        resize: vertical;
+        min-height: 80px;
+        background: var(--bg);
+        color: var(--text);
+      }
 
-  .notes-area {
-    width: 100%;
-    margin-top: 10px;
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-size: 14px;
-    font-family: inherit;
-    resize: vertical;
-    min-height: 80px;
-    background: var(--bg);
-    color: var(--text);
-  }
+      .save-notes-btn {
+        margin-top: 8px;
+        padding: 8px 16px;
+        border: 1px solid var(--accent);
+        background: transparent;
+        color: var(--accent);
+        border-radius: var(--radius);
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .save-notes-btn:active {
+        background: var(--accent-bg);
+      }
 
-  .save-notes-btn {
-    margin-top: 8px;
-    padding: 8px 16px;
-    border: 1px solid var(--accent);
-    background: transparent;
-    color: var(--accent);
-    border-radius: var(--radius);
-    font-size: 14px;
-    cursor: pointer;
-  }
-  .save-notes-btn:active { background: var(--accent-bg); }
+      .completion-msg {
+        font-size: 13px;
+        color: var(--green);
+        margin-top: 8px;
+        font-weight: 500;
+        display: none;
+      }
+      .completion-msg.visible {
+        display: block;
+      }
 
-  .completion-msg {
-    font-size: 13px;
-    color: var(--green);
-    margin-top: 8px;
-    font-weight: 500;
-    display: none;
-  }
-  .completion-msg.visible { display: block; }
+      .progress-bar-wrap {
+        margin-top: 8px;
+      }
+      .progress-bar {
+        height: 5px;
+        background: var(--border);
+        border-radius: 3px;
+        overflow: hidden;
+        margin-top: 6px;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--accent);
+        border-radius: 3px;
+        transition: width 0.3s;
+      }
+      .progress-label {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
 
-  .progress-bar-wrap { margin-top: 8px; }
-  .progress-bar {
-    height: 5px;
-    background: var(--border);
-    border-radius: 3px;
-    overflow: hidden;
-    margin-top: 6px;
-  }
-  .progress-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 3px;
-    transition: width 0.3s;
-  }
-  .progress-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+      .chevron {
+        font-size: 18px;
+        color: var(--muted);
+        transition: transform 0.2s;
+      }
+      .chevron.open {
+        transform: rotate(180deg);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Workout Tracker</h1>
+      <p id="overall-progress">Loading progress...</p>
+    </header>
 
-  .chevron { font-size: 18px; color: var(--muted); transition: transform 0.2s; }
-  .chevron.open { transform: rotate(180deg); }
+    <div class="week-nav">
+      <button class="week-arrow" id="week-prev" onclick="changeWeek(-1)">
+        ‹
+      </button>
+      <div class="week-info">
+        <div class="week-title" id="week-title">Week 4</div>
+        <select
+          class="week-select"
+          id="week-select"
+          onchange="jumpToWeek(this.value)"
+        ></select>
+      </div>
+      <button class="week-arrow" id="week-next" onclick="changeWeek(1)">
+        ›
+      </button>
+    </div>
 
-  .tip-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--muted);
-    margin: 16px 0 6px;
-  }
-  .tip-box {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.6;
-    margin-bottom: 4px;
-  }
-</style>
-</head>
-<body>
+    <div class="content" id="content"></div>
 
-<header>
-  <h1>4-Month Workout Plan</h1>
-  <p id="overall-progress">Loading progress...</p>
-</header>
+    <script>
+      const WEEK_START = 4;
+      const WEEK_END = 11; // 8 weeks ≈ 2 months
 
-<div class="phase-nav" id="phase-nav"></div>
-<div class="content" id="content"></div>
+      // ─── PHASES: each covers a range of weeks, sharing one weekly template ─────
+      const PHASES = [
+        {
+          id: "phaseA",
+          weeks: [4, 5],
+          label: "Weeks 4–5 · Re-establishing balance",
+          note: "New split: chest+back and shoulders+face-pulls are trained together each upper day so nothing stays pulled forward by the end of the session. Sunday's bonus day fills gaps (glutes, quads, core, calves) and deliberately skips heavy chest/back/shoulder work so Monday isn't compromised — but if you feel wiped Sunday night, push it earlier in the day or skip it that week.",
+          template: [
+            {
+              id: "d1",
+              label: "Monday",
+              name: "Upper Body Balance A",
+              exercises: [
+                {
+                  id: "u1",
+                  name: "Chest press machine",
+                  sub: "10 reps × 3 sets — moderate weight, controlled tempo",
+                },
+                {
+                  id: "u2",
+                  name: "Seated cable row",
+                  sub: "10 reps × 3 sets — right after chest press, to balance the pull",
+                },
+                {
+                  id: "u3",
+                  name: "Shoulder press machine",
+                  sub: "10 reps × 3 sets — stop just before lockout",
+                },
+                {
+                  id: "u4",
+                  name: "Face pull (cable)",
+                  sub: "15 reps × 3 sets — elbows high, this undoes the shoulder press",
+                },
+                {
+                  id: "u5",
+                  name: "Tricep pushdown (cable)",
+                  sub: "12 reps × 2 sets",
+                },
+                {
+                  id: "u6",
+                  name: "Bicep curl",
+                  sub: "12 reps × 2 sets — paired with triceps for balance",
+                },
+              ],
+            },
+            { id: "d2", label: "Tuesday", name: "Rest", rest: true },
+            {
+              id: "d3",
+              label: "Wednesday",
+              name: "Lower Body",
+              exercises: [
+                { id: "u7", name: "Leg press", sub: "12 reps × 3 sets" },
+                { id: "u8", name: "Seated leg curl", sub: "12 reps × 3 sets" },
+                {
+                  id: "u9",
+                  name: "Hip abductor machine",
+                  sub: "15 reps × 3 sets",
+                },
+                {
+                  id: "u10",
+                  name: "Reverse lunge (bodyweight)",
+                  sub: "10 each leg × 3 sets — step back, front shin stays vertical",
+                },
+                { id: "u11", name: "Calf raise", sub: "15 reps × 3 sets" },
+                {
+                  id: "u12",
+                  name: "Dead bug + bird dog",
+                  sub: "10 each × 2 rounds — core finisher",
+                },
+              ],
+            },
+            { id: "d4", label: "Thursday", name: "Rest", rest: true },
+            {
+              id: "d5",
+              label: "Friday",
+              name: "Upper Body Balance B",
+              exercises: [
+                {
+                  id: "u13",
+                  name: "Pec fly machine",
+                  sub: "15 reps × 3 sets — different angle than Monday's press",
+                },
+                {
+                  id: "u14",
+                  name: "Lat pulldown (to front)",
+                  sub: "15 reps × 3 sets — pairs with the fly above",
+                },
+                {
+                  id: "u15",
+                  name: "Band pull-apart",
+                  sub: "15 reps × 3 sets — shoulder health, do this every upper day",
+                },
+                {
+                  id: "u16",
+                  name: "Seated row (wide grip)",
+                  sub: "15 reps × 3 sets",
+                },
+              ],
+            },
+            {
+              id: "d6",
+              label: "Saturday",
+              name: "Run Day",
+              exercises: [
+                { id: "u17", name: "Walk 5 min warm-up" },
+                {
+                  id: "u18",
+                  name: "Jog 2 min / walk 1 min",
+                  sub: "× 8 rounds — ~25 min total, conversational pace",
+                },
+                { id: "u19", name: "Walk 5 min cool-down" },
+                {
+                  id: "u20",
+                  name: "Post-run stretch",
+                  sub: "5 min — calf, hip flexor, one-leg knee hug",
+                },
+              ],
+            },
+            {
+              id: "d7",
+              label: "Sunday",
+              name: "Full Body Gap-Filler",
+              optional: true,
+              exercises: [
+                {
+                  id: "u21",
+                  name: "Leg extension machine",
+                  sub: "12 reps × 2 sets — quad isolation, nothing else in the week hits this directly",
+                },
+                {
+                  id: "u22",
+                  name: "Hip thrust or glute bridge",
+                  sub: "15 reps × 3 sets — glutes get no dedicated work elsewhere in the week",
+                },
+                {
+                  id: "u23",
+                  name: "Rear delt fly (machine or cable)",
+                  sub: "15 reps × 2 sets — light, different angle than face pulls, won't tire Monday's pressing muscles",
+                },
+                {
+                  id: "u24",
+                  name: "Standing calf raise",
+                  sub: "15 reps × 2 sets — different stance than Wednesday",
+                },
+                {
+                  id: "u25",
+                  name: "Pallof press (cable, anti-rotation)",
+                  sub: "10 each side × 2 sets — spine-neutral core work, good for tight hips/back",
+                },
+                {
+                  id: "u26",
+                  name: "Side plank",
+                  sub: "20–30 sec each side × 2 sets — modify on knees if needed",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: "phaseB",
+          weeks: [6, 7, 8],
+          label: "Weeks 6–8 · Building load",
+          note: "Same structure, more volume. Add weight wherever last block felt easy — always leave 2 reps in the tank. Running extends toward a continuous jog.",
+          template: [
+            {
+              id: "d1",
+              label: "Monday",
+              name: "Upper Body Balance A",
+              exercises: [
+                {
+                  id: "v1",
+                  name: "Chest press machine",
+                  sub: "10 reps × 4 sets — heavier if last block felt easy",
+                },
+                { id: "v2", name: "Seated cable row", sub: "10 reps × 4 sets" },
+                {
+                  id: "v3",
+                  name: "Shoulder press machine",
+                  sub: "10 reps × 3 sets",
+                },
+                {
+                  id: "v4",
+                  name: "Face pull (cable)",
+                  sub: "15 reps × 3 sets",
+                },
+                { id: "v5", name: "Tricep pushdown", sub: "12 reps × 3 sets" },
+                { id: "v6", name: "Bicep curl", sub: "12 reps × 3 sets" },
+              ],
+            },
+            { id: "d2", label: "Tuesday", name: "Rest", rest: true },
+            {
+              id: "d3",
+              label: "Wednesday",
+              name: "Lower Body",
+              exercises: [
+                { id: "v7", name: "Leg press", sub: "10 reps × 4 sets" },
+                { id: "v8", name: "Seated leg curl", sub: "12 reps × 4 sets" },
+                {
+                  id: "v9",
+                  name: "Hip abductor machine",
+                  sub: "15 reps × 3 sets",
+                },
+                {
+                  id: "v10",
+                  name: "Reverse lunge",
+                  sub: "10 each leg × 3 sets — add light dumbbells if bodyweight is easy",
+                },
+                { id: "v11", name: "Calf raise", sub: "15 reps × 3 sets" },
+                {
+                  id: "v12",
+                  name: "Dead bug + bird dog",
+                  sub: "10 each × 2 rounds",
+                },
+              ],
+            },
+            { id: "d4", label: "Thursday", name: "Rest", rest: true },
+            {
+              id: "d5",
+              label: "Friday",
+              name: "Upper Body Balance B",
+              exercises: [
+                { id: "v13", name: "Pec fly machine", sub: "15 reps × 3 sets" },
+                { id: "v14", name: "Lat pulldown", sub: "12 reps × 4 sets" },
+                { id: "v15", name: "Band pull-apart", sub: "15 reps × 3 sets" },
+                {
+                  id: "v16",
+                  name: "Seated row (wide grip)",
+                  sub: "12 reps × 4 sets",
+                },
+              ],
+            },
+            {
+              id: "d6",
+              label: "Saturday",
+              name: "Run Day",
+              exercises: [
+                { id: "v17", name: "Walk 5 min warm-up" },
+                {
+                  id: "v18",
+                  name: "25–30 min continuous jog",
+                  sub: "walk briefly only if truly needed",
+                },
+                { id: "v19", name: "Walk 5 min cool-down" },
+                { id: "v20", name: "Post-run stretch", sub: "5 min" },
+              ],
+            },
+            {
+              id: "d7",
+              label: "Sunday",
+              name: "Full Body Gap-Filler",
+              optional: true,
+              exercises: [
+                {
+                  id: "v21",
+                  name: "Leg extension machine",
+                  sub: "12 reps × 3 sets",
+                },
+                {
+                  id: "v22",
+                  name: "Hip thrust or glute bridge",
+                  sub: "15 reps × 3 sets — add weight across your lap if bodyweight feels easy",
+                },
+                {
+                  id: "v23",
+                  name: "Hip adductor machine",
+                  sub: "15 reps × 2 sets — inner thigh, untouched the rest of the week",
+                },
+                { id: "v24", name: "Rear delt fly", sub: "15 reps × 3 sets" },
+                {
+                  id: "v25",
+                  name: "Standing calf raise",
+                  sub: "15 reps × 3 sets",
+                },
+                {
+                  id: "v26",
+                  name: "Pallof press",
+                  sub: "10 each side × 3 sets",
+                },
+                {
+                  id: "v27",
+                  name: "Side plank",
+                  sub: "30 sec each side × 2 sets",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: "phaseC",
+          weeks: [9, 10, 11],
+          label: "Weeks 9–11 · Peak block",
+          note: "Final push before we reassess. Heavier weights, longer runs, same balanced pairing. At the end of week 11, take stock — running time, weight moved, mobility — and that becomes the brief for the next block.",
+          template: [
+            {
+              id: "d1",
+              label: "Monday",
+              name: "Upper Body Balance A",
+              exercises: [
+                {
+                  id: "w1",
+                  name: "Chest press machine",
+                  sub: "8 reps × 4 sets — heaviest yet, form still comes first",
+                },
+                { id: "w2", name: "Seated cable row", sub: "8 reps × 4 sets" },
+                {
+                  id: "w3",
+                  name: "Shoulder press machine",
+                  sub: "10 reps × 4 sets",
+                },
+                {
+                  id: "w4",
+                  name: "Face pull (cable)",
+                  sub: "15 reps × 3 sets",
+                },
+                { id: "w5", name: "Tricep pushdown", sub: "12 reps × 3 sets" },
+                { id: "w6", name: "Bicep curl", sub: "12 reps × 3 sets" },
+              ],
+            },
+            { id: "d2", label: "Tuesday", name: "Rest", rest: true },
+            {
+              id: "d3",
+              label: "Wednesday",
+              name: "Lower Body",
+              exercises: [
+                { id: "w7", name: "Leg press", sub: "8 reps × 4 sets" },
+                { id: "w8", name: "Seated leg curl", sub: "10 reps × 4 sets" },
+                {
+                  id: "w9",
+                  name: "Hip abductor machine",
+                  sub: "15 reps × 3 sets",
+                },
+                {
+                  id: "w10",
+                  name: "Reverse lunge with dumbbells",
+                  sub: "10 each leg × 3 sets",
+                },
+                { id: "w11", name: "Calf raise", sub: "15 reps × 3 sets" },
+                {
+                  id: "w12",
+                  name: "Core circuit",
+                  sub: "dead bug + bird dog + glute bridge × 2 rounds",
+                },
+              ],
+            },
+            { id: "d4", label: "Thursday", name: "Rest", rest: true },
+            {
+              id: "d5",
+              label: "Friday",
+              name: "Upper Body Balance B",
+              exercises: [
+                { id: "w13", name: "Pec fly machine", sub: "12 reps × 4 sets" },
+                { id: "w14", name: "Lat pulldown", sub: "10 reps × 4 sets" },
+                { id: "w15", name: "Band pull-apart", sub: "15 reps × 3 sets" },
+                {
+                  id: "w16",
+                  name: "Seated row (wide grip)",
+                  sub: "10 reps × 4 sets",
+                },
+              ],
+            },
+            {
+              id: "d6",
+              label: "Saturday",
+              name: "Run Day",
+              exercises: [
+                { id: "w17", name: "Walk 5 min warm-up" },
+                {
+                  id: "w18",
+                  name: "30–35 min continuous jog",
+                  sub: "your benchmark for this block",
+                },
+                { id: "w19", name: "Walk 5 min cool-down" },
+                { id: "w20", name: "Full post-run stretch", sub: "10 min" },
+              ],
+            },
+            {
+              id: "d7",
+              label: "Sunday",
+              name: "Full Body Gap-Filler",
+              optional: true,
+              exercises: [
+                {
+                  id: "w21",
+                  name: "Leg extension machine",
+                  sub: "10 reps × 3 sets",
+                },
+                {
+                  id: "w22",
+                  name: "Hip thrust or glute bridge",
+                  sub: "12 reps × 4 sets — heaviest yet",
+                },
+                {
+                  id: "w23",
+                  name: "Hip adductor machine",
+                  sub: "15 reps × 3 sets",
+                },
+                { id: "w24", name: "Rear delt fly", sub: "15 reps × 3 sets" },
+                {
+                  id: "w25",
+                  name: "Single-leg leg press (light, unilateral)",
+                  sub: "10 each leg × 2 sets — balance and stability, keep weight light",
+                },
+                {
+                  id: "w26",
+                  name: "Standing calf raise",
+                  sub: "15 reps × 3 sets",
+                },
+                {
+                  id: "w27",
+                  name: "Pallof press",
+                  sub: "10 each side × 3 sets",
+                },
+                {
+                  id: "w28",
+                  name: "Side plank",
+                  sub: "30–40 sec each side × 2 sets",
+                },
+              ],
+            },
+          ],
+        },
+      ];
 
-<script>
-const PLAN = [
-  // ─── PHASE 1 ── Weeks 1–3: Re-establishing the base ───────────────────────
-  {
-    id: 'p1',
-    label: 'Phase 1',
-    title: 'Phase 1 — Weeks 1–3',
-    sub: 'Re-establishing the base · 4 days on · Full gym + running',
-    note: 'Fresh start — no guilt. Run intervals are walk/jog, never gasping. Weights start light; form matters more than load. If something aches, drop the weight or swap for a rest day.',
-    days: [
-      {
-        id: 'p1d1', label: 'Day 1', name: 'Run + Lower Body',
-        exercises: [
-          { id: 'a1', name: 'Walk 5 min warm-up' },
-          { id: 'a2', name: 'Jog 1 min / walk 2 min', sub: '× 6 rounds — slow conversational pace, never gasping' },
-          { id: 'a3', name: 'Walk 5 min cool-down' },
-          { id: 'a4', name: 'Leg press machine', sub: '× 12 · 3 sets — light weight, full press, don\'t lock knees' },
-          { id: 'a5', name: 'Seated leg curl', sub: '× 12 · 3 sets' },
-          { id: 'a6', name: 'Glute bridge', sub: '× 15 · 3 sets — floor or bench, squeeze at top' },
-        ]
-      },
-      { id: 'p1d2', label: 'Day 2', name: 'Rest', rest: true },
-      {
-        id: 'p1d3', label: 'Day 3', name: 'Upper Body Push / Pull',
-        exercises: [
-          { id: 'a7', name: 'Chest press machine', sub: '× 12 · 3 sets — light start, elbows at 45° not flared wide' },
-          { id: 'a8', name: 'Seated cable row', sub: '× 12 · 3 sets — pull to lower chest, squeeze shoulder blades' },
-          { id: 'a9', name: 'Shoulder press machine', sub: '× 12 · 3 sets — stop just before lockout at top' },
-          { id: 'a10', name: 'Lat pulldown (to front)', sub: '× 12 · 3 sets — pull to collarbone, never behind neck' },
-          { id: 'a11', name: 'Band pull-apart', sub: '× 15 · 2 sets — arms straight, slow and controlled' },
-        ]
-      },
-      { id: 'p1d4', label: 'Day 4', name: 'Rest', rest: true },
-      {
-        id: 'p1d5', label: 'Day 5', name: 'Run + Core',
-        exercises: [
-          { id: 'a12', name: 'Walk 5 min warm-up' },
-          { id: 'a13', name: 'Jog 1 min / walk 90 sec', sub: '× 8 rounds — slightly more running than Day 1' },
-          { id: 'a14', name: 'Walk 5 min cool-down' },
-          { id: 'a15', name: 'Dead bug', sub: '× 10 · 2 rounds — back flat, lower opposite arm and leg slowly' },
-          { id: 'a16', name: 'Bird dog', sub: '× 10 each side · 2 rounds — don\'t let hips rotate' },
-          { id: 'a17', name: 'Side-lying clamshell', sub: '× 12 each side — lie on side, knees bent, open top knee' },
-        ]
-      },
-      { id: 'p1d6', label: 'Day 6', name: 'Rest', rest: true },
-      {
-        id: 'p1d7', label: 'Day 7', name: 'Full Body Machines + Air Squats',
-        exercises: [
-          { id: 'a18', name: 'Air squat', sub: '× 15 · 3 sets — sit back, knees track over toes, don\'t cave in' },
-          { id: 'a19', name: 'Leg press', sub: '× 12 · 3 sets' },
-          { id: 'a20', name: 'Chest press machine', sub: '× 12 · 2 sets' },
-          { id: 'a21', name: 'Seated row', sub: '× 12 · 2 sets' },
-          { id: 'a22', name: 'Hip abductor machine', sub: '× 15 · 2 sets — works outer hips, good for knee tracking' },
-          { id: 'a23', name: 'Face pull (cable)', sub: '× 15 · 2 sets — cable at eye level, pull to forehead, elbows high' },
-        ]
-      },
-    ]
-  },
+      function getPhaseForWeek(week) {
+        return PHASES.find((p) => p.weeks.includes(week)) || PHASES[0];
+      }
 
-  // ─── PHASE 2 ── Weeks 4–7: Building volume ────────────────────────────────
-  {
-    id: 'p2',
-    label: 'Phase 2',
-    title: 'Phase 2 — Weeks 4–7',
-    sub: 'Building volume · 4 days on · Push/pull/legs split begins',
-    note: 'Add weight only when a full set feels genuinely easy — never sacrifice form. Run intervals get longer. Reverse lunges introduced this phase — step back, not forward.',
-    days: [
-      {
-        id: 'p2d1', label: 'Monday', name: 'Lower Body',
-        exercises: [
-          { id: 'b1', name: 'Leg press', sub: '× 10 · 4 sets — add weight if last phase felt easy' },
-          { id: 'b2', name: 'Seated leg curl', sub: '× 12 · 3 sets' },
-          { id: 'b3', name: 'Hip abductor machine', sub: '× 15 · 3 sets' },
-          { id: 'b4', name: 'Reverse lunge (bodyweight)', sub: '× 10 each leg · 3 sets — step back, front shin stays vertical' },
-          { id: 'b5', name: 'Calf raise', sub: '× 15 · 3 sets — machine or standing on a step' },
-          { id: 'b6', name: 'Glute bridge', sub: '× 15 · 2 sets — core finisher' },
-        ]
-      },
-      { id: 'p2d2', label: 'Tuesday', name: 'Rest / easy walk', rest: true },
-      {
-        id: 'p2d3', label: 'Wednesday', name: 'Push — Chest / Shoulders / Triceps',
-        exercises: [
-          { id: 'b7', name: 'Chest press machine', sub: '× 10 · 4 sets' },
-          { id: 'b8', name: 'Shoulder press machine', sub: '× 12 · 3 sets' },
-          { id: 'b9', name: 'Pec fly machine', sub: '× 12 · 3 sets — don\'t let arms go past your sides' },
-          { id: 'b10', name: 'Tricep pushdown (cable)', sub: '× 12 · 3 sets — elbows stay pinned to your sides' },
-          { id: 'b11', name: 'Band pull-apart', sub: '× 15 · 2 sets — shoulder health, always finish push days with this' },
-        ]
-      },
-      { id: 'p2d4', label: 'Thursday', name: 'Run day',
-        exercises: [
-          { id: 'b12', name: 'Walk 5 min warm-up' },
-          { id: 'b13', name: 'Jog 2 min / walk 1 min', sub: '× 8 rounds — ~25 min total' },
-          { id: 'b14', name: 'Walk 5 min cool-down' },
-          { id: 'b15', name: 'Dead bug × 10 · 2 rounds' },
-          { id: 'b16', name: 'Bird dog × 10 each side · 2 rounds' },
-        ]
-      },
-      {
-        id: 'p2d5', label: 'Friday', name: 'Pull — Back / Biceps',
-        exercises: [
-          { id: 'b17', name: 'Lat pulldown', sub: '× 10 · 4 sets — to collarbone, lean back slightly, squeeze lats' },
-          { id: 'b18', name: 'Seated cable row', sub: '× 10 · 4 sets' },
-          { id: 'b19', name: 'Face pull (cable)', sub: '× 15 · 3 sets — most important exercise for shoulder health' },
-          { id: 'b20', name: 'Bicep curl', sub: '× 12 · 3 sets — machine or dumbbell, don\'t swing' },
-        ]
-      },
-      { id: 'p2d6', label: 'Saturday', name: 'Rest', rest: true },
-      {
-        id: 'p2d7', label: 'Sunday', name: 'Longer Run',
-        exercises: [
-          { id: 'b21', name: 'Walk 5 min warm-up' },
-          { id: 'b22', name: '25–30 min continuous jog', sub: 'Walk if truly needed but aim to keep moving. Slow is fine.' },
-          { id: 'b23', name: 'Walk 5 min cool-down' },
-          { id: 'b24', name: 'Calf stretch', sub: '30 sec each leg — hands on wall, heel down, leg back' },
-          { id: 'b25', name: 'Hip flexor stretch', sub: '30 sec each side — kneel on one knee, shift hips gently forward' },
-        ]
-      },
-    ]
-  },
+      const STORAGE_KEY = "workout_tracker_v2"; // kept from before — old weeks 1–3 logs stay intact, untouched
+      const WEEK_POINTER_KEY = "workout_current_week"; // remembers which week you're on
 
-  // ─── PHASE 3 ── Weeks 8–13: Building strength + endurance ─────────────────
-  {
-    id: 'p3',
-    label: 'Phase 3',
-    title: 'Phase 3 — Weeks 8–13',
-    sub: 'Strength + endurance build · 4 days on',
-    note: 'Habit should feel automatic now. Weights get heavier — always leave 2 reps in the tank. Target 30–40 min continuous running by end of this phase. Elliptical or bike is fine on days knees need a break.',
-    days: [
-      {
-        id: 'p3d1', label: 'Monday', name: 'Lower Body (heavier)',
-        exercises: [
-          { id: 'c1', name: 'Leg press', sub: '× 8 · 4 sets — meaningfully heavier than phase 2' },
-          { id: 'c2', name: 'Leg curl', sub: '× 10 · 4 sets' },
-          { id: 'c3', name: 'Reverse lunge', sub: '× 10 each leg · 3 sets — add light dumbbells if bodyweight is easy' },
-          { id: 'c4', name: 'Hip abductor machine', sub: '× 15 · 3 sets' },
-          { id: 'c5', name: 'Calf raise', sub: '× 15 · 3 sets' },
-          { id: 'c6', name: 'Dead bug + bird dog', sub: '× 10 each · 2 rounds — core finisher' },
-        ]
-      },
-      {
-        id: 'p3d2', label: 'Tuesday', name: 'Run Day',
-        exercises: [
-          { id: 'c7', name: 'Walk 5 min warm-up' },
-          { id: 'c8', name: '30–35 min continuous jog', sub: 'Slow is fine, stopping is not. Walk 1 min if truly needed then get back to jogging.' },
-          { id: 'c9', name: 'Walk 5 min cool-down' },
-          { id: 'c10', name: 'Post-run stretch', sub: 'Calf stretch + hip flexor + knee hug (one leg at a time) — 5 min' },
-        ]
-      },
-      {
-        id: 'p3d3', label: 'Wednesday', name: 'Push — Chest / Shoulders / Triceps',
-        exercises: [
-          { id: 'c11', name: 'Chest press machine', sub: '× 8 · 4 sets — heavier' },
-          { id: 'c12', name: 'Shoulder press machine', sub: '× 10 · 4 sets' },
-          { id: 'c13', name: 'Pec fly machine', sub: '× 12 · 3 sets' },
-          { id: 'c14', name: 'Tricep pushdown', sub: '× 12 · 3 sets' },
-          { id: 'c15', name: 'Face pull', sub: '× 15 · 3 sets — never skip this on push days' },
-        ]
-      },
-      { id: 'p3d4', label: 'Thursday', name: 'Rest', rest: true },
-      {
-        id: 'p3d5', label: 'Friday', name: 'Pull — Back / Biceps',
-        exercises: [
-          { id: 'c16', name: 'Lat pulldown', sub: '× 8 · 4 sets' },
-          { id: 'c17', name: 'Seated cable row', sub: '× 10 · 4 sets' },
-          { id: 'c18', name: 'Face pull', sub: '× 15 · 3 sets' },
-          { id: 'c19', name: 'Bicep curl', sub: '× 12 · 3 sets' },
-          { id: 'c20', name: 'Hip abductor machine', sub: '× 15 · 2 sets — keep doing this, it helps knees on runs' },
-        ]
-      },
-      { id: 'p3d6', label: 'Saturday', name: 'Rest', rest: true },
-      {
-        id: 'p3d7', label: 'Sunday', name: 'Long Run / Cardio',
-        exercises: [
-          { id: 'c21', name: 'Walk 5 min warm-up' },
-          { id: 'c22', name: '35–45 min continuous', sub: 'Your weekly endurance push. Bike or elliptical OK if knees need rest.' },
-          { id: 'c23', name: 'Walk 5 min cool-down' },
-          { id: 'c24', name: 'Post-run stretch', sub: '5 min — calf, hip flexor, one-leg knee hug each side' },
-        ]
-      },
-    ]
-  },
+      function loadData() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? JSON.parse(raw) : {};
+        } catch (e) {
+          return {};
+        }
+      }
+      function saveData(d) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+        } catch (e) {}
+      }
 
-  // ─── PHASE 4 ── Weeks 14–17: Peak + checkpoint ────────────────────────────
-  {
-    id: 'p4',
-    label: 'Phase 4',
-    title: 'Phase 4 — Weeks 14–17',
-    sub: 'Peak block · 4 days on · Checkpoint at week 16',
-    note: 'This is the top of the 4-month block. Intervals replace one easy run — push harder but not sprinting. At week 16 take stock: running duration, weights moved, how you feel. That becomes the brief for the next block.',
-    days: [
-      {
-        id: 'p4d1', label: 'Monday', name: 'Lower Body (peak)',
-        exercises: [
-          { id: 'd1', name: 'Leg press', sub: '× 8 · 4 sets — heaviest yet, still good form' },
-          { id: 'd2', name: 'Leg curl', sub: '× 10 · 4 sets' },
-          { id: 'd3', name: 'Reverse lunge with dumbbells', sub: '× 10 each leg · 3 sets' },
-          { id: 'd4', name: 'Hip abductor machine', sub: '× 15 · 3 sets' },
-          { id: 'd5', name: 'Calf raise', sub: '× 15 · 3 sets' },
-          { id: 'd6', name: 'Core circuit', sub: 'Dead bug + bird dog + glute bridge — 2 rounds' },
-        ]
-      },
-      {
-        id: 'p4d2', label: 'Tuesday', name: 'Interval Run',
-        exercises: [
-          { id: 'd7', name: 'Walk 5 min warm-up' },
-          { id: 'd8', name: 'Jog 3 min / fast jog 1 min', sub: '× 5 rounds — "fast" means noticeably harder, not a sprint' },
-          { id: 'd9', name: 'Walk 5 min cool-down' },
-          { id: 'd10', name: 'Post-run stretch', sub: '5 min — calf, hip flexor, knee hug' },
-        ]
-      },
-      {
-        id: 'p4d3', label: 'Wednesday', name: 'Push',
-        exercises: [
-          { id: 'd11', name: 'Chest press machine', sub: '× 8 · 4 sets' },
-          { id: 'd12', name: 'Shoulder press machine', sub: '× 10 · 4 sets' },
-          { id: 'd13', name: 'Pec fly machine', sub: '× 12 · 3 sets' },
-          { id: 'd14', name: 'Tricep pushdown', sub: '× 12 · 3 sets' },
-          { id: 'd15', name: 'Face pull', sub: '× 15 · 3 sets' },
-          { id: 'd16', name: 'Band pull-apart', sub: '× 15 · 2 sets' },
-        ]
-      },
-      { id: 'p4d4', label: 'Thursday', name: 'Rest', rest: true },
-      {
-        id: 'p4d5', label: 'Friday', name: 'Pull',
-        exercises: [
-          { id: 'd17', name: 'Lat pulldown', sub: '× 8 · 4 sets' },
-          { id: 'd18', name: 'Seated row', sub: '× 10 · 4 sets' },
-          { id: 'd19', name: 'Face pull', sub: '× 15 · 3 sets' },
-          { id: 'd20', name: 'Bicep curl', sub: '× 12 · 3 sets' },
-        ]
-      },
-      { id: 'p4d6', label: 'Saturday', name: 'Rest', rest: true },
-      {
-        id: 'p4d7', label: 'Sunday', name: 'Long Run — Benchmark',
-        exercises: [
-          { id: 'd21', name: 'Walk 5 min warm-up' },
-          { id: 'd22', name: '45–55 min continuous', sub: 'Your 4-month benchmark. Note the time. Bike or elliptical if knees need it.' },
-          { id: 'd23', name: 'Walk 5 min cool-down' },
-          { id: 'd24', name: 'Full post-run stretch', sub: '10 min — take your time, you earned it' },
-        ]
-      },
-    ]
-  }
-];
+      function loadCurrentWeek() {
+        const saved = parseInt(localStorage.getItem(WEEK_POINTER_KEY), 10);
+        if (!isNaN(saved) && saved >= WEEK_START && saved <= WEEK_END)
+          return saved;
+        return WEEK_START;
+      }
+      function saveCurrentWeek(w) {
+        try {
+          localStorage.setItem(WEEK_POINTER_KEY, String(w));
+        } catch (e) {}
+      }
 
-const STORAGE_KEY = 'workout_tracker_v2';
+      let data = loadData();
+      let currentWeek = loadCurrentWeek();
 
-function loadData() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch(e) { return {}; }
-}
+      function compositeId(week, templateDayId) {
+        return `w${week}_${templateDayId}`;
+      }
 
-function saveData(data) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
-}
+      function parseComposite(id) {
+        const [wPart, dayId] = id.split("_");
+        return { week: parseInt(wPart.replace("w", ""), 10), dayId };
+      }
 
-let data = loadData();
-let currentPhase = 0;
+      function getDayData(id) {
+        return data[id] || { exercises: {}, finished: false, notes: "" };
+      }
 
-function getDayData(dayId) {
-  return data[dayId] || { exercises: {}, finished: false, notes: '' };
-}
+      function getTemplateDay(id) {
+        const { week, dayId } = parseComposite(id);
+        const phase = getPhaseForWeek(week);
+        return phase.template.find((d) => d.id === dayId);
+      }
 
-function setExerciseStatus(dayId, exId, status) {
-  if (!data[dayId]) data[dayId] = { exercises: {}, finished: false, notes: '' };
-  if (data[dayId].exercises[exId] === status) {
-    delete data[dayId].exercises[exId];
-  } else {
-    data[dayId].exercises[exId] = status;
-  }
-  saveData(data);
-  // Update the clicked exercise's own buttons, plus everything downstream
-  updateExerciseButtons(dayId, exId);
-  updateFinishBtn(dayId);
-  updateDayBadge(dayId);
-  updateProgressBars();
-  updateOverallProgress();
-}
+      function getDayExercises(id) {
+        const day = getTemplateDay(id);
+        return day ? day.exercises || [] : [];
+      }
 
-function updateExerciseButtons(dayId, exId) {
-  const current = data[dayId]?.exercises?.[exId];
-  const btns = document.querySelectorAll(`[data-day="${dayId}"][data-ex="${exId}"]`);
-  btns.forEach(btn => {
-    const btnStatus = btn.getAttribute('data-status');
-    btn.classList.remove('selected-green', 'selected-yellow', 'selected-red');
-    if (current === btnStatus) {
-      btn.classList.add('selected-' + btnStatus);
-    }
-  });
-}
+      function allMarked(dd, exercises) {
+        if (!dd || !dd.exercises) return false;
+        return exercises.every((e) => dd.exercises[e.id]);
+      }
 
-function allMarked(dayData, exercises) {
-  if (!dayData || !dayData.exercises) return false;
-  return exercises.every(e => dayData.exercises[e.id]);
-}
+      function getDayStatus(dd, exercises) {
+        if (!dd || !dd.exercises) return "pending";
+        if (dd.finished) return "done";
+        const statuses = exercises
+          .map((e) => dd.exercises[e.id])
+          .filter(Boolean);
+        if (statuses.length === 0) return "pending";
+        if (statuses.every((s) => s === "green")) return "done";
+        return "partial";
+      }
 
-function getDayExercises(dayId) {
-  for (const phase of PLAN) {
-    for (const day of phase.days) {
-      if (day.id === dayId) return day.exercises || [];
-    }
-  }
-  return [];
-}
+      function setExerciseStatus(id, exId, status) {
+        if (!data[id]) data[id] = { exercises: {}, finished: false, notes: "" };
+        if (data[id].exercises[exId] === status) {
+          delete data[id].exercises[exId];
+        } else {
+          data[id].exercises[exId] = status;
+        }
+        saveData(data);
+        updateExerciseButtons(id, exId);
+        updateFinishBtn(id);
+        updateDayBadge(id);
+        updateWeekProgress();
+        updateOverallProgress();
+      }
 
-function updateFinishBtn(dayId) {
-  const dd = getDayData(dayId);
-  const exercises = getDayExercises(dayId);
-  const ready = allMarked(dd, exercises);
-  const btn = document.querySelector(`[data-finish="${dayId}"]`);
-  if (!btn) return;
-  if (dd.finished) return; // already finished, don't change
-  btn.disabled = !ready;
-  btn.textContent = ready ? 'Finish day →' : 'Mark all exercises first';
-}
+      function updateExerciseButtons(id, exId) {
+        const current = data[id]?.exercises?.[exId];
+        document
+          .querySelectorAll(`[data-day="${id}"][data-ex="${exId}"]`)
+          .forEach((btn) => {
+            const s = btn.getAttribute("data-status");
+            btn.classList.remove(
+              "selected-green",
+              "selected-yellow",
+              "selected-red",
+            );
+            if (current === s) btn.classList.add("selected-" + s);
+          });
+      }
 
-function updateDayBadge(dayId) {
-  const dd = getDayData(dayId);
-  const exercises = getDayExercises(dayId);
-  const badge = document.querySelector(`[data-badge="${dayId}"]`);
-  if (!badge) return;
-  const statuses = exercises.map(e => dd.exercises?.[e.id]).filter(Boolean);
-  if (statuses.length === 0) {
-    badge.textContent = 'Not started';
-    badge.className = 'day-status status-pending';
-  } else if (statuses.every(s => s === 'green')) {
-    badge.textContent = '✓ Done';
-    badge.className = 'day-status status-done';
-  } else if (statuses.includes('red')) {
-    badge.textContent = '~ Partial';
-    badge.className = 'day-status status-partial';
-  } else {
-    badge.textContent = '~ Partial';
-    badge.className = 'day-status status-partial';
-  }
-}
+      function updateFinishBtn(id) {
+        const dd = getDayData(id);
+        if (dd.finished) return;
+        const ready = allMarked(dd, getDayExercises(id));
+        const btn = document.querySelector(`[data-finish="${id}"]`);
+        if (!btn) return;
+        btn.disabled = !ready;
+        btn.textContent = ready ? "Finish day →" : "Mark all exercises first";
+      }
 
-function updateProgressBars() {
-  PLAN.forEach((phase, i) => {
-    const workDays = phase.days.filter(d => !d.rest);
-    const finishedDays = workDays.filter(d => getDayData(d.id).finished).length;
-    const pct = workDays.length > 0 ? Math.round((finishedDays / workDays.length) * 100) : 0;
-    const fill = document.querySelector(`[data-phase-fill="${phase.id}"]`);
-    const label = document.querySelector(`[data-phase-label="${phase.id}"]`);
-    if (fill) fill.style.width = pct + '%';
-    if (label) label.textContent = `${finishedDays} of ${workDays.length} days done`;
-  });
-}
+      function updateDayBadge(id) {
+        const dd = getDayData(id);
+        const exercises = getDayExercises(id);
+        const badge = document.querySelector(`[data-badge="${id}"]`);
+        if (!badge) return;
+        const statuses = exercises
+          .map((e) => dd.exercises?.[e.id])
+          .filter(Boolean);
+        if (
+          dd.finished ||
+          (statuses.length && statuses.every((s) => s === "green"))
+        ) {
+          badge.textContent = "✓ Done";
+          badge.className = "day-status status-done";
+        } else if (statuses.length) {
+          badge.textContent = "~ Partial";
+          badge.className = "day-status status-partial";
+        } else {
+          badge.textContent = "Not started";
+          badge.className = "day-status status-pending";
+        }
+      }
 
-function updateOverallProgress() {
-  let total = 0, done = 0;
-  PLAN.forEach(phase => {
-    phase.days.forEach(day => {
-      if (day.rest) return;
-      total++;
-      if (getDayData(day.id).finished) done++;
-    });
-  });
-  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-  document.getElementById('overall-progress').textContent =
-    `${done} of ${total} workout days complete · ${pct}%`;
-}
+      function finishDayOnly(id) {
+        if (!data[id]) data[id] = { exercises: {}, finished: false, notes: "" };
+        data[id].finished = true;
+        const notes = document.getElementById("notes-" + id);
+        if (notes) data[id].notes = notes.value;
+        saveData(data);
+        updateWeekProgress();
+        updateOverallProgress();
+        const body = document.getElementById("body-" + id);
+        if (!body) return;
+        const btn = body.querySelector(`[data-finish="${id}"]`);
+        if (btn) {
+          btn.textContent = "✓ Day finished";
+          btn.disabled = true;
+        }
+        const msg = body.querySelector(".completion-msg");
+        if (msg) msg.classList.add("visible");
+        const header = body.previousElementSibling;
+        if (header) {
+          const badge = header.querySelector(".day-status");
+          if (badge) {
+            badge.textContent = "✓ Done";
+            badge.className = "day-status status-done";
+          }
+        }
+      }
 
-function finishDayOnly(dayId) {
-  if (!data[dayId]) data[dayId] = { exercises: {}, finished: false, notes: '' };
-  data[dayId].finished = true;
-  const notes = document.getElementById('notes-' + dayId);
-  if (notes) data[dayId].notes = notes.value;
-  saveData(data);
-  updateOverallProgress();
-  updateProgressBars();
-  const body = document.getElementById('body-' + dayId);
-  if (!body) return;
-  const btn = body.querySelector(`[data-finish="${dayId}"]`);
-  if (btn) { btn.textContent = '✓ Day finished'; btn.disabled = true; }
-  const msg = body.querySelector('.completion-msg');
-  if (msg) msg.classList.add('visible');
-  const header = body.previousElementSibling;
-  if (header) {
-    const badge = header.querySelector('.day-status');
-    if (badge) { badge.textContent = '✓ Done'; badge.className = 'day-status status-done'; }
-  }
-}
+      function saveNotes(id, notes) {
+        if (!data[id]) data[id] = { exercises: {}, finished: false, notes: "" };
+        data[id].notes = notes;
+        saveData(data);
+      }
 
-function saveNotes(dayId, notes) {
-  if (!data[dayId]) data[dayId] = { exercises: {}, finished: false, notes: '' };
-  data[dayId].notes = notes;
-  saveData(data);
-}
+      function saveNotesBtn(id) {
+        const notes = document.getElementById("notes-" + id);
+        if (notes) saveNotes(id, notes.value);
+        const btn = document.querySelector(`[data-savenotes="${id}"]`);
+        if (!btn) return;
+        const orig = btn.textContent;
+        btn.textContent = "Saved ✓";
+        setTimeout(() => (btn.textContent = orig), 1500);
+      }
 
-function saveNotesBtn(dayId) {
-  const notes = document.getElementById('notes-' + dayId);
-  if (notes) saveNotes(dayId, notes.value);
-  const btn = document.querySelector(`[data-savenotes="${dayId}"]`);
-  if (!btn) return;
-  const orig = btn.textContent;
-  btn.textContent = 'Saved ✓';
-  setTimeout(() => btn.textContent = orig, 1500);
-}
+      function toggleDay(id) {
+        const body = document.getElementById("body-" + id);
+        const header = body.previousElementSibling;
+        const chevron = header.querySelector(".chevron");
+        const hidden = body.classList.toggle("hidden");
+        header.classList.toggle("collapsed", hidden);
+        chevron.classList.toggle("open", !hidden);
+      }
 
-function getDayStatus(dd, exercises) {
-  if (!dd || !dd.exercises) return 'pending';
-  if (dd.finished) return 'done';
-  const statuses = exercises.map(e => dd.exercises[e.id]).filter(Boolean);
-  if (statuses.length === 0) return 'pending';
-  if (statuses.every(s => s === 'green')) return 'done';
-  if (statuses.includes('red')) return 'partial';
-  return 'partial';
-}
+      function updateWeekProgress() {
+        const phase = getPhaseForWeek(currentWeek);
+        const structured = phase.template.filter((d) => !d.rest && !d.optional);
+        const done = structured.filter(
+          (d) => getDayData(compositeId(currentWeek, d.id)).finished,
+        ).length;
+        const pct = structured.length
+          ? Math.round((done / structured.length) * 100)
+          : 0;
+        const fill = document.getElementById("week-progress-fill");
+        const label = document.getElementById("week-progress-label");
+        if (fill) fill.style.width = pct + "%";
+        if (label)
+          label.textContent = `${done} of ${structured.length} required days done this week`;
+      }
 
-function renderPhaseNav() {
-  const nav = document.getElementById('phase-nav');
-  nav.innerHTML = PLAN.map((p, i) =>
-    `<button class="phase-btn${i === currentPhase ? ' active' : ''}" onclick="switchPhase(${i})">${p.label}</button>`
-  ).join('');
-}
+      function updateOverallProgress() {
+        let total = 0,
+          done = 0;
+        for (let w = WEEK_START; w <= WEEK_END; w++) {
+          const phase = getPhaseForWeek(w);
+          phase.template.forEach((d) => {
+            if (d.rest || d.optional) return;
+            total++;
+            if (getDayData(compositeId(w, d.id)).finished) done++;
+          });
+        }
+        const pct = total ? Math.round((done / total) * 100) : 0;
+        document.getElementById("overall-progress").textContent =
+          `${done} of ${total} workout days complete across weeks ${WEEK_START}–${WEEK_END} · ${pct}%`;
+      }
 
-function switchPhase(i) {
-  currentPhase = i;
-  renderPhaseNav();
-  renderContent();
-}
+      function changeWeek(delta) {
+        currentWeek = Math.min(
+          WEEK_END,
+          Math.max(WEEK_START, currentWeek + delta),
+        );
+        saveCurrentWeek(currentWeek);
+        renderAll();
+      }
+      function jumpToWeek(val) {
+        currentWeek = Math.min(
+          WEEK_END,
+          Math.max(WEEK_START, parseInt(val, 10)),
+        );
+        saveCurrentWeek(currentWeek);
+        renderAll();
+      }
 
-function toggleDay(dayId) {
-  const body = document.getElementById('body-' + dayId);
-  const header = body.previousElementSibling;
-  const chevron = header.querySelector('.chevron');
-  if (body.classList.contains('hidden')) {
-    body.classList.remove('hidden');
-    header.classList.remove('collapsed');
-    chevron.classList.add('open');
-  } else {
-    body.classList.add('hidden');
-    header.classList.add('collapsed');
-    chevron.classList.remove('open');
-  }
-}
+      function renderWeekNav() {
+        document.getElementById("week-title").textContent =
+          `Week ${currentWeek}`;
+        document.getElementById("week-prev").disabled =
+          currentWeek <= WEEK_START;
+        document.getElementById("week-next").disabled = currentWeek >= WEEK_END;
+        const select = document.getElementById("week-select");
+        select.innerHTML = "";
+        for (let w = WEEK_START; w <= WEEK_END; w++) {
+          const opt = document.createElement("option");
+          opt.value = w;
+          opt.textContent = `Jump to week ${w}`;
+          if (w === currentWeek) opt.selected = true;
+          select.appendChild(opt);
+        }
+      }
 
-function renderContent() {
-  const phase = PLAN[currentPhase];
-  const content = document.getElementById('content');
+      function renderContent() {
+        const phase = getPhaseForWeek(currentWeek);
+        const content = document.getElementById("content");
 
-  const workDays = phase.days.filter(d => !d.rest);
-  const finishedDays = workDays.filter(d => getDayData(d.id).finished).length;
-  const phasePct = workDays.length > 0 ? Math.round((finishedDays / workDays.length) * 100) : 0;
-
-  let html = `
+        let html = `
     <div class="phase-header">
-      <h2>${phase.title}</h2>
-      <p>${phase.sub}</p>
+      <h2>${phase.label}</h2>
       <div class="progress-bar-wrap">
-        <div class="progress-bar"><div class="progress-fill" data-phase-fill="${phase.id}" style="width:${phasePct}%"></div></div>
-        <p class="progress-label" data-phase-label="${phase.id}">${finishedDays} of ${workDays.length} days done</p>
+        <div class="progress-bar"><div class="progress-fill" id="week-progress-fill" style="width:0%"></div></div>
+        <p class="progress-label" id="week-progress-label"></p>
       </div>
       <div class="phase-note">${phase.note}</div>
     </div>
   `;
 
-  phase.days.forEach(day => {
-    if (day.rest) {
-      html += `<div class="day-section"><div class="rest-day">${day.label} · ${day.name}</div></div>`;
-      return;
-    }
+        phase.template.forEach((day) => {
+          const id = compositeId(currentWeek, day.id);
 
-    const dd = getDayData(day.id);
-    const status = getDayStatus(dd, day.exercises);
-    const statusLabels = { done: '✓ Done', partial: '~ Partial', missed: '✗ Missed', pending: 'Not started' };
-    const statusClasses = { done: 'status-done', partial: 'status-partial', missed: 'status-missed', pending: 'status-pending' };
-    const isOpen = !dd.finished;
-    const ready = allMarked(dd, day.exercises);
-    const savedNote = dd.notes || '';
+          if (day.rest) {
+            html += `<div class="day-section"><div class="rest-day">${day.label} · ${day.name}</div></div>`;
+            return;
+          }
 
-    html += `<div class="day-section">
-      <div class="day-header${isOpen ? '' : ' collapsed'}" onclick="toggleDay('${day.id}')">
+          const dd = getDayData(id);
+          const status = getDayStatus(dd, day.exercises);
+          const statusLabels = {
+            done: "✓ Done",
+            partial: "~ Partial",
+            pending: "Not started",
+          };
+          const statusClasses = {
+            done: "status-done",
+            partial: "status-partial",
+            pending: "status-pending",
+          };
+          const isOpen = !dd.finished;
+          const ready = allMarked(dd, day.exercises);
+          const savedNote = dd.notes || "";
+
+          html += `<div class="day-section">
+      <div class="day-header${isOpen ? "" : " collapsed"}" onclick="toggleDay('${id}')">
         <div>
-          <div class="day-title">${day.label} · ${day.name}</div>
+          <span class="day-title">${day.label} · ${day.name}</span>
+          ${day.optional ? '<span class="optional-tag">Optional</span>' : ""}
         </div>
         <div style="display:flex;align-items:center;gap:8px">
-          <span class="day-status ${statusClasses[status]}" data-badge="${day.id}">${statusLabels[status]}</span>
-          <span class="chevron${isOpen ? ' open' : ''}">⌄</span>
+          <span class="day-status ${statusClasses[status]}" data-badge="${id}">${statusLabels[status]}</span>
+          <span class="chevron${isOpen ? " open" : ""}">⌄</span>
         </div>
       </div>
-      <div class="day-body${isOpen ? '' : ' hidden'}" id="body-${day.id}">`;
+      <div class="day-body${isOpen ? "" : " hidden"}" id="body-${id}">`;
 
-    day.exercises.forEach(ex => {
-      const exStatus = dd.exercises?.[ex.id];
-      html += `<div class="exercise-row">
+          day.exercises.forEach((ex) => {
+            const exStatus = dd.exercises?.[ex.id];
+            html += `<div class="exercise-row">
         <div class="exercise-text">
           ${ex.name}
-          ${ex.sub ? `<div class="exercise-sub">${ex.sub}</div>` : ''}
+          ${ex.sub ? `<div class="exercise-sub">${ex.sub}</div>` : ""}
         </div>
         <div class="status-btns">
-          <button class="status-btn${exStatus === 'green' ? ' selected-green' : ''}"
-            data-day="${day.id}" data-ex="${ex.id}" data-status="green"
-            onclick="setExerciseStatus('${day.id}','${ex.id}','green')" title="Completed">✓</button>
-          <button class="status-btn${exStatus === 'yellow' ? ' selected-yellow' : ''}"
-            data-day="${day.id}" data-ex="${ex.id}" data-status="yellow"
-            onclick="setExerciseStatus('${day.id}','${ex.id}','yellow')" title="Partial">~</button>
-          <button class="status-btn${exStatus === 'red' ? ' selected-red' : ''}"
-            data-day="${day.id}" data-ex="${ex.id}" data-status="red"
-            onclick="setExerciseStatus('${day.id}','${ex.id}','red')" title="Missed">✗</button>
+          <button class="status-btn${exStatus === "green" ? " selected-green" : ""}"
+            data-day="${id}" data-ex="${ex.id}" data-status="green"
+            onclick="setExerciseStatus('${id}','${ex.id}','green')" title="Completed">✓</button>
+          <button class="status-btn${exStatus === "yellow" ? " selected-yellow" : ""}"
+            data-day="${id}" data-ex="${ex.id}" data-status="yellow"
+            onclick="setExerciseStatus('${id}','${ex.id}','yellow')" title="Partial">~</button>
+          <button class="status-btn${exStatus === "red" ? " selected-red" : ""}"
+            data-day="${id}" data-ex="${ex.id}" data-status="red"
+            onclick="setExerciseStatus('${id}','${ex.id}','red')" title="Missed">✗</button>
         </div>
       </div>`;
-    });
+          });
 
-    html += `<div class="finish-section">
-      <button class="finish-btn" data-finish="${day.id}"
-        ${ready && !dd.finished ? '' : 'disabled'}
-        onclick="finishDayOnly('${day.id}')">
-        ${dd.finished ? '✓ Day finished' : ready ? 'Finish day →' : 'Mark all exercises first'}
+          html += `<div class="finish-section">
+      <button class="finish-btn" data-finish="${id}"
+        ${ready && !dd.finished ? "" : "disabled"}
+        onclick="finishDayOnly('${id}')">
+        ${dd.finished ? "✓ Day finished" : ready ? "Finish day →" : "Mark all exercises first"}
       </button>
-      <p class="completion-msg${dd.finished ? ' visible' : ''}">Day logged ✓</p>
-      <textarea class="notes-area"
-        id="notes-${day.id}"
+      <p class="completion-msg${dd.finished ? " visible" : ""}">Day logged ✓</p>
+      <textarea class="notes-area" id="notes-${id}"
         placeholder="How did it feel? Anything to note for next time..."
-        onchange="saveNotes('${day.id}', this.value)">${savedNote}</textarea>
-      <button class="save-notes-btn" data-savenotes="${day.id}" onclick="saveNotesBtn('${day.id}')">Save notes</button>
+        onchange="saveNotes('${id}', this.value)">${savedNote}</textarea>
+      <button class="save-notes-btn" data-savenotes="${id}" onclick="saveNotesBtn('${id}')">Save notes</button>
     </div>`;
 
-    html += `</div></div>`;
-  });
+          html += `</div></div>`;
+        });
 
-  content.innerHTML = html;
-}
+        content.innerHTML = html;
+      }
 
-renderPhaseNav();
-renderContent();
-updateOverallProgress();
-</script>
-</body>
+      function renderAll() {
+        renderWeekNav();
+        renderContent();
+        updateWeekProgress();
+        updateOverallProgress();
+      }
+
+      renderAll();
+    </script>
+  </body>
 </html>
